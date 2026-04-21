@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Audio Annotation & Knowledge Extraction</title>
+
+    <style>
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #ff9ad5, #a5d8ff, #c4b5fd);
+        background-size: 300% 300%;
+        animation: gradientMove 12s ease infinite;
+    }
+
+    @keyframes gradientMove {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        padding: 35px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 15px 40px rgba(80, 40, 120, 0.18);
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2.4rem;
+        margin-bottom: 35px;
+        color: #ffffff;
+        text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        letter-spacing: 1px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 12px;
+        color: #4b2e83;
+        font-size: 1.35rem;
+    }
+
+    form {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    input[type="file"] {
+        background: rgba(255,255,255,0.75);
+        border: none;
+        padding: 12px;
+        border-radius: 14px;
+        width: 100%;
+        max-width: 420px;
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    button {
+        border: none;
+        padding: 14px 28px;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        color: white;
+        background: linear-gradient(135deg, #ff6ec7, #6ea8ff);
+        box-shadow: 0 8px 20px rgba(110, 168, 255, 0.35);
+        transition: all 0.25s ease;
+    }
+
+    button:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 12px 28px rgba(255, 110, 199, 0.35);
+    }
+
+    .box {
+        background: rgba(255,255,255,0.75);
+        border: 1px solid rgba(255,255,255,0.4);
+        border-radius: 20px;
+        padding: 18px 20px;
+        margin-bottom: 18px;
+        color: #3a2f5a;
+        line-height: 1.7;
+        box-shadow: 0 8px 24px rgba(120, 90, 180, 0.08);
+        white-space: pre-wrap;
+        overflow-x: auto;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    li {
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        border-radius: 14px;
+        background: linear-gradient(90deg, rgba(255,182,225,0.45), rgba(173,216,255,0.45));
+        color: #4a356f;
+        font-weight: 500;
+    }
+
+    .relationship {
+        margin-bottom: 12px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(255, 170, 220, 0.6), rgba(180, 220, 255, 0.6));
+        color: #3c2c5a;
+        font-family: "Courier New", monospace;
+        font-size: 15px;
+        border-left: 5px solid #ff6ec7;
+        transition: transform 0.2s ease;
+    }
+
+    .relationship:hover {
+        transform: translateX(6px);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 24px;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+    .file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 14px 26px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ff6ec7, #6ea8ff);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(110, 168, 255, 0.35);
+    transition: all 0.25s ease;
+}
+
+.custom-file-upload:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 14px 30px rgba(255, 110, 199, 0.4);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#file-name {
+    color: #4b2e83;
+    font-size: 0.95rem;
+    background: rgba(255,255,255,0.6);
+    padding: 8px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+    </style>
+</head>
+<script>
+function updateFileName(input) {
+    const fileName = input.files.length > 0
+        ? input.files[0].name
+        : "No file selected";
+
+    document.getElementById("file-name").textContent = fileName;
+}
+</script>
+<body>
+
+    <div class="container">
+        <h1>🎤 AI Audio Annotation & Knowledge Extraction</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="file-upload">
+    <label for="audio" class="custom-file-upload">
+        🎵 Choose Audio File
+    </label>
+    <input id="audio" type="file" name="audio" accept="audio/*" required onchange="updateFileName(this)">
+    <span id="file-name">No file selected</span>
+</div>
+            <br>
+            <button type="submit">Analyze Audio</button>
+        </form>
+
+        {% if result %}
+
+            <h2>Transcript</h2>
+            <div class="box">
+                {{ result.transcript }}
+            </div>
+
+            <h2>Summary</h2>
+            <div class="box">
+                {{ result.summary }}
+            </div>
+
+            <h2>Entities</h2>
+            <div class="box">
+                <ul>
+                    {% for entity in result.entities %}
+                        <li>{{ entity }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <h2>Semantic Tags</h2>
+            <div class="box">
+                <ul>
+                    {% for tag in result.tags %}
+                        <li>{{ tag }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <h2>Knowledge Graph Relationships</h2>
+            <div class="box">
+                {% for rel in result.relationships %}
+                    <div class="relationship">
+                        {{ rel.subject }} → {{ rel.relation }} → {{ rel.object }}
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endif %}
+    </div>
+
+</body>
+</html>
